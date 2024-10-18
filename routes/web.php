@@ -1,15 +1,12 @@
 <?php
 
+use App\Livewire\Pages\Documentation;
+use App\Livewire\Pages\Home;
+use App\Livewire\Pages\Icons;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome');
+Route::get('/', Home::class);
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::get('/docs', Documentation::class);
 
-Route::view('profile', 'profile')
-    ->middleware(['auth'])
-    ->name('profile');
-
-require __DIR__.'/auth.php';
+Route::get('/icons', Icons::class);

@@ -1,110 +1,112 @@
-<?php
 
-use App\Livewire\Actions\Logout;
-use Livewire\Volt\Component;
+<flux:header container class="bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-700  transition-colors">
+    <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
 
-new class extends Component
-{
-    /**
-     * Log the current user out of the application.
-     */
-    public function logout(Logout $logout): void
-    {
-        $logout();
-
-        $this->redirect('/', navigate: true);
-    }
-}; ?>
-
-<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
-    <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}" wire:navigate>
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
-                    </a>
-                </div>
-
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                </div>
-            </div>
-
-            <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                            <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
-
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile')" wire:navigate>
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <!-- Authentication -->
-                        <button wire:click="logout" class="w-full text-start">
-                            <x-dropdown-link>
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </button>
-                    </x-slot>
-                </x-dropdown>
-            </div>
-
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-        </div>
+    <div class="flex gap-2 items-center">
+        <flux:icon.tabler.windmill class="dark:!text-white" /> <flux:heading>Flux Icons</flux:heading>
     </div>
 
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-        </div>
+    <flux:spacer />
+    {{--  
+    <flux:brand href="#" logo="" name="Flux Icons" class="max-lg:hidden dark:hidden" />
+    <flux:brand href="#" logo="" name="Flux Icons" class="max-lg:!hidden hidden dark:flex" />
+    --}}
+    <flux:navbar class="-mb-px max-lg:hidden">
+        <flux:navbar.item icon="tabler.home" href="/"  wire:navigate>Home</flux:navbar.item>
+        <flux:navbar.item icon="tabler.icons" href="/icons" wire:navigate>Icons</flux:navbar.item>
+        <flux:navbar.item icon="tabler.info-square-rounded" href="/docs" wire:navigate>Documentation</flux:navbar.item>
+    </flux:navbar>
 
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800 dark:text-gray-200" x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
-                <div class="font-medium text-sm text-gray-500">{{ auth()->user()->email }}</div>
-            </div>
+    <flux:spacer />
 
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile')" wire:navigate>
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
+    <flux:navbar class="mr-4">
+        <flux:tooltip content="Switch to dark mode">
+            <flux:navbar.item icon="tabler.moon" iconVariant="outline" iconSize="sm" label="Dark mode" @click="$store.darkMode.toggle()" x-show="!$store.darkMode.on" x-cloak></flux:menu.item>
+        </flux:tooltip>
+        <flux:tooltip content="Switch to light mode">
+            <flux:navbar.item icon="tabler.sun" label="Light mode" @click="$store.darkMode.toggle()" x-show="$store.darkMode.on" x-cloak></flux:menu.item>
+        </flux:tooltip>
+        <flux:separator vertical />
+        <flux:tooltip content="Visit Github repository">
+            <flux:navbar.item icon="tabler.brand-github" href="https://github.com/Ympact/flux-icons" target="_new" label="Github"></flux:menu.item>
+        </flux:tooltip>
+    </flux:navbar>
 
-                <!-- Authentication -->
-                <button wire:click="logout" class="w-full text-start">
-                    <x-responsive-nav-link>
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </button>
-            </div>
-        </div>
-    </div>
-</nav>
+</flux:header>
+
+<script>
+    document.addEventListener('livewire:navigated', () => {
+        // wire:navigate will wipe out the dark class on the body element, se we need to reapply it...
+        Alpine.store('darkMode').applyToBody()
+    })
+    
+    document.addEventListener('alpine:init', () => {
+
+    Alpine.store('darkMode', {
+        on: false,
+
+        toggle() {
+            console.log('toggle')
+            this.on = ! this.on
+        },
+
+        on() {
+            this.on = true
+        },
+
+        off() {
+            this.on = false
+        },
+
+        init() {
+            console.log('init')
+            this.on = this.wantsDarkMode()
+
+            Alpine.effect(() => {
+                document.dispatchEvent(new CustomEvent('dark-mode-toggled', { detail: { isDark: this.on }, bubbles: true }))
+                this.applyToBody()
+            })
+
+            // Putting this in a set timeout to wait for the iframes to be loaded...
+            setTimeout(() => {
+                Alpine.effect(() => {
+                    this.applyToIframes()
+                })
+            }, 5000)
+
+            let media = window.matchMedia('(prefers-color-scheme: dark)')
+
+            media.addEventListener('change', e => {
+                this.on = media.matches
+            })
+        },
+
+        wantsDarkMode() {
+            let media = window.matchMedia('(prefers-color-scheme: dark)')
+
+            if (window.localStorage.getItem('darkMode') === '') {
+                return media.matches
+            } else {
+                return JSON.parse(window.localStorage.getItem('darkMode'))
+            }
+        },
+
+        applyToBody() {
+            let state = this.on
+
+            window.localStorage.setItem('darkMode', JSON.stringify(state))
+
+            state ? document.body.classList.add('dark') : document.body.classList.remove('dark')
+        },
+
+        applyToIframes() {
+            let state = this.on
+
+            // Update dark mode inside iframes...
+            state
+                ? document.querySelectorAll('iframe').forEach(iframe => iframe.contentDocument?.querySelector('body')?.classList?.add('dark'))
+                : document.querySelectorAll('iframe').forEach(iframe => iframe.contentDocument?.querySelector('body')?.classList?.remove('dark'))
+        }
+    })
+})
+</script>
