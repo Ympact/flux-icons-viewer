@@ -2,13 +2,14 @@
 
 namespace Ympact\FluxIcons\Services;
 
+use Illuminate\Support\Collection;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Ympact\FluxIcons\DataTypes\Icon;
+use Ympact\FluxIcons\Types\Icon;
 
 class IconBuilder
 {
@@ -116,7 +117,7 @@ class IconBuilder
             }
         }
 
-        // if $this->sourceDirs['outline'] has an icon key, then filter the files using this callback
+        // if $this->sourceDirs['outline'] has a icon key, then filter the files using this callback
         if (Arr::has($this->sourceDirs, 'outline.filter')) {
             $files = collect($files)->filter(function($file) {
                 $icons = &$this->icons;
@@ -128,7 +129,6 @@ class IconBuilder
             });
         }
 
-        //dump($files);
         // map the files into a new collection as Icon() and by intersecting with $icons
         $outlineIcons = collect($files)->map(function($file){
             return new Icon(config($this->vendorConfig), $file);
@@ -152,7 +152,6 @@ class IconBuilder
                 }
             }
         }
-
 
         $progressBar = new ProgressBar($this->output, count( $outlineIcons));
         $progressBar->start();
@@ -365,10 +364,10 @@ class IconBuilder
 
     /**
      * getAvailableVendors
-     * @return array
+     * @return Collection
      */
-    public static function getAvailableVendors(): array
+    public static function getAvailableVendors(): Collection
     {
-        return array_keys( config("flux-icons.vendors" ));
+        return collect(config("flux-icons.vendors" ));
     }
 }
