@@ -17,11 +17,15 @@ class Icons extends Component
     #[Url]
     public $vendor;
 
+    public $query = '';
+
     public $variant;
 
     public $vendors;
 
     public array $variants;
+
+    public array $files;
 
     public Collection $iconNames;
     
@@ -89,19 +93,66 @@ class Icons extends Component
     public function findIcons(){
         $vendorDir = IconBuilder::getAvailableVendors()->get($this->vendor)['namespace'] ;
 
-        $files = File::glob(
+        $this->files[$this->vendor] = File::glob(
             Str::of(resource_path('views/flux/icon/'. $vendorDir ))->append('/*')->finish('.blade.php')
         );
         // get the filenames
-        $this->iconNames = collect($files)->map(function($file){
-            return Str::of(pathinfo($file, PATHINFO_FILENAME))->replace('.blade', '')->toString();
+        $this->iconNames = collect($this->files[$this->vendor])->map(function($file){
+            return [
+                'icon' => Str::of(pathinfo($file, PATHINFO_FILENAME))->replace('.blade', '')->toString(),
+                'lev' => 0
+            ];
         });
 
+    }
+
+    public function updatedQuery(){
+        if(strlen($this->query) > 2){
+            // reset the page
+            $this->page = 1;
+            $this->search();
+        }
+        if(strlen($this->query) == 0){
+            // reset the page
+            $this->page = 1;
+            $this->resetSearch();
+        }
+
+    }
+
+    public function resetSearch(){
+        $this->iconNames = collect($this->files[$this->vendor])->map(function($file){
+            return [
+                'icon' => Str::of(pathinfo($file, PATHINFO_FILENAME))->replace('.blade', '')->toString(),
+                'lev' => 0
+            ];
+        });
+    }
+
+    public function search(){
+        // loop through words to find the closest
+        $this->iconNames = $this->iconNames->map( function($icon){
+
+            // calculate the distance between the input word,
+            // and the current word
+            $lev = levenshtein($this->query, $icon['icon']);
+            // add lev to the array
+            return ['icon' => $icon['icon'], 'lev' => $lev];
+            
+        })->filter(function($icon){
+            // filter out the words that are too far away
+            return $icon['lev'] < 3;
+        })->sortBy('lev');
     }
 
     public function getNamespace($vendor = null){
         $vendor = $vendor ?? $this->vendor;
         return IconBuilder::getAvailableVendors()->get($vendor)['namespace'];
+    }
+
+    public function getVendorName($vendor = null){
+        $vendor = $vendor ?? $this->vendor;
+        return IconBuilder::getAvailableVendors()->get($vendor)['vendor_name'];
     }
 
     public function updatedVendor($vendor)

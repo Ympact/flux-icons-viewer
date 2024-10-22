@@ -1,8 +1,8 @@
-<div class="space-y-6">
-    <flux:heading size="xl" level="1">Icons</flux:heading>
+<div class="space-y-6" x-data="{ viewSize: 24, currentIcon: null }">
+    <flux:heading size="xl" level="1">Flux Icons <span wire:target="vendor" wire:loading.class="hidden transition">{{ $this->getVendorName() }}</span><flux:icon.loading  wire:target="vendor" wire:loading /></flux:heading>
 
     <div class="flex gap-6 sticky">
-        <flux:card class="shrink-0 w-60 space-y-4">
+        <flux:card class="shrink-0 w-60 space-y-6">
             <flux:select variant="listbox" searchable label="Vendor" wire:model.live="vendor">
                 @foreach($vendors as $key => $option)
                     <flux:option wire:key="{{ $key }}" value="{{ $key }}">{{ $option }}</flux:option>
@@ -14,11 +14,20 @@
                     <flux:radio wire:key="{{ $key }}" value="{{ $key }}" label="{{ $option }}" />
                 @endforeach
             </flux:radio.group>
-
+                
+            <!-- input slider to increase view size of the icons -->
+            <flux:field class="flex flex-col">
+                <flux:label>View size</flux:label>
+                <div>
+                    <input type="range" min="1" max="50" step="1"  class="w-1/2" x-model="viewSize">
+                    <flux:badge variant="subtle" size="sm">x</flux:badge>
+                    <flux:button icon="tabler.refresh" @click="viewSize=24" variant="subtle" iconVariant="outline" size="sm" />
+                </div>
+            </flux:field>
         </flux:card>
 
         <div class="flex flex-1 flex-col space-y-6">
-            <flux:input type="search" icon="magnifying-glass" placeholder="Search icons...">
+            <flux:input type="search" icon="magnifying-glass" wire:model.live="query" placeholder="Search icons..." >
                 <x-slot name="iconTrailing" class="flex gap-2">
                     <flux:badge variant="pill" size="sm">{{ $this->iconCount }} icons</flux:badge>
                     <flux:button size="sm" variant="subtle" iconVariant="outline" icon="tabler.filter" class="-mr-1" />
@@ -28,16 +37,18 @@
             <div class="relative">
 
 
-                <div class="grid grid-cols-6 gap-4">
+                <div class="grid grid-cols-6 gap-4" x-ref="gallery">
 
                     @foreach($this->icons as $icon)
-                        <flux:card wire:key="{{ $icon }}" class="relative flex flex-col items-center justify-center space-y-3 !p-2 aspect-square hover:bg-zinc-50 dark:hover:bg-white/5 cursor-pointer transition">
-                            <flux:icon icon="{{ $this->getNamespace() }}.{{ $icon }}" variant="{{ $variant }}" class="text-2xl dark:!text-white/90" />
+                    <flux:modal.trigger name="show-icon">
+                        <flux:card as="button" wire:key="{{ $icon['icon'] }}" class="relative flex flex-col items-center justify-center space-y-3 !p-2 aspect-square hover:bg-zinc-50 dark:hover:bg-white/5 cursor-pointer transition">
+                            <flux:icon x-bind:style="{'width': viewSize+'px', 'height':viewSize+'px'}" icon="{{ $this->getNamespace() }}.{{ $icon['icon'] }}" variant="{{ $variant }}" class="text-2xl dark:!text-white/90" />
                             <div class="flex flex-col w-full justify-center items-center truncate">
                                 <div class="text-xs text-zinc-800/30 dark:!text-white/30">{{ $this->getNamespace() }}.</div>
-                                <div class="text-xs text-zinc-800/80 dark:!text-white/50 w-full text-center truncate">{{ $icon }}</div>
+                                <div class="text-xs text-zinc-800/80 dark:!text-white/50 w-full text-center truncate">{{ $icon['icon'] }}</div>
                             </div>
                         </flux:card>
+                    </flux:modal.trigger>
                     @endforeach
                 </div>
 
@@ -46,7 +57,8 @@
                         <flux:icon.loading />
                         <div>Loading icons</div>
                     </flux:card>           
-                </div>      
+                </div>   
+
             </div>
 
             <!-- Pagination -->
@@ -57,4 +69,17 @@
         </div>
 
     </div>
+
+    <flux:modal name="show-icon" class="md:w-96 space-y-6">
+        <div>
+            <flux:heading size="lg">Update profile</flux:heading>
+
+            <div>
+                <div>original</div>
+                <div>outline icon</div>
+            </div>
+            // mark as correct / incorrect
+        </div>
+    </flux:modal>
+
 </div>
