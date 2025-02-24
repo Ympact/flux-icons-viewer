@@ -3,13 +3,13 @@
     <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
 
     <div class="flex gap-2 items-center">
-        <flux:icon.tabler.windmill class="dark:!text-white" /> <flux:heading>Flux Icons</flux:heading>
+        <flux:icon.tabler.windmill class="dark:text-white!" /> <flux:heading>Flux Icons</flux:heading>
     </div>
 
     <flux:spacer />
     {{--  
     <flux:brand href="#" logo="" name="Flux Icons" class="max-lg:hidden dark:hidden" />
-    <flux:brand href="#" logo="" name="Flux Icons" class="max-lg:!hidden hidden dark:flex" />
+    <flux:brand href="#" logo="" name="Flux Icons" class="max-lg:hidden! hidden dark:flex" />
     --}}
     <flux:navbar class="-mb-px max-lg:hidden">
         <flux:navbar.item icon="tabler.home" href="/"  wire:navigate>Home</flux:navbar.item>

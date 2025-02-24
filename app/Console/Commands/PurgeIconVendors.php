@@ -18,7 +18,7 @@ class PurgeIconVendors extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Remove all build icons from the vendors.';
 
     /**
      * Execute the console command.

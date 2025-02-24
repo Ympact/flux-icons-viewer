@@ -5,7 +5,7 @@
         <flux:card class="shrink-0 w-60 space-y-6">
             <flux:select variant="listbox" searchable label="Vendor" wire:model.live="vendor">
                 @foreach($vendors as $key => $option)
-                    <flux:option wire:key="{{ $key }}" value="{{ $key }}">{{ $option }}</flux:option>
+                    <flux:select.option wire:key="{{ $key }}" value="{{ $key }}">{{ $option }}</flux:select.option>
                 @endforeach
             </flux:select>
 
@@ -42,17 +42,17 @@
                     @foreach($this->icons as $icon)
                         <flux:card as="button" wire:key="{{ $icon['icon'] }}" 
                             x-on:click="$wire.showIconModal('{{ $icon['icon'] }}')"
-                            class="relative flex flex-col items-center justify-center space-y-3 !p-2 aspect-square hover:bg-zinc-50 dark:hover:bg-white/5 cursor-pointer transition">
-                            <flux:icon x-bind:style="{'width': viewSize+'px', 'height':viewSize+'px'}" icon="{{ $this->getNamespace() }}.{{ $icon['icon'] }}" variant="{{ $variant }}" class="text-2xl dark:!text-white/90" />
+                            class="relative flex flex-col items-center justify-center space-y-3 p-2! aspect-square hover:bg-zinc-50 dark:hover:bg-white/5 cursor-pointer transition">
+                            <flux:icon x-bind:style="{'width': viewSize+'px', 'height':viewSize+'px'}" icon="{{ $this->getNamespace() }}.{{ $icon['icon'] }}" variant="{{ $variant }}" class="text-2xl dark:text-white/90!" />
                             <div class="flex flex-col w-full justify-center items-center truncate">
-                                <div class="text-xs text-zinc-800/30 dark:!text-white/30">{{ $this->getNamespace() }}.</div>
-                                <div class="text-xs text-zinc-800/80 dark:!text-white/50 w-full text-center truncate">{{ $icon['icon'] }}</div>
+                                <div class="text-xs text-zinc-800/30 dark:text-white/30!">{{ $this->getNamespace() }}.</div>
+                                <div class="text-xs text-zinc-800/80 dark:text-white/50! w-full text-center truncate">{{ $icon['icon'] }}</div>
                             </div>
                         </flux:card>
                     @endforeach
                 </div>
 
-                <div wire:loading  wire:target="vendor" class="absolute h-full w-full backdrop-blur top-0 transition">
+                <div wire:loading  wire:target="vendor" class="absolute h-full w-full backdrop-blur-sm top-0 transition">
                     <flux:card class="h-full w-full inset-4 flex items-center justify-center gap-4"> 
                         <flux:icon.loading />
                         <div>Loading icons</div>
