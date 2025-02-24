@@ -20,12 +20,28 @@
     <flux:spacer />
 
     <flux:navbar class="mr-4">
+        <flux:dropdown x-data align="end">
+            <flux:button variant="subtle" square class="group" aria-label="Preferred color scheme">
+                <flux:icon.sun x-show="$flux.appearance === 'light'" variant="mini" class="text-zinc-500 dark:text-white" />
+                <flux:icon.moon x-show="$flux.appearance === 'dark'" variant="mini" class="text-zinc-500 dark:text-white" />
+                <flux:icon.moon x-show="$flux.appearance === 'system' && $flux.dark" variant="mini" />
+                <flux:icon.sun x-show="$flux.appearance === 'system' && ! $flux.dark" variant="mini" />
+            </flux:button>
+        
+            <flux:menu>
+                <flux:menu.item icon="sun" x-on:click="$flux.appearance = 'light'">Light</flux:menu.item>
+                <flux:menu.item icon="moon" x-on:click="$flux.appearance = 'dark'">Dark</flux:menu.item>
+                <flux:menu.item icon="computer-desktop" x-on:click="$flux.appearance = 'system'">System</flux:menu.item>
+            </flux:menu>
+        </flux:dropdown>
+{{--
         <flux:tooltip content="Switch to dark mode">
             <flux:navbar.item icon="tabler.moon" iconVariant="outline" iconSize="sm" label="Dark mode" @click="$store.darkMode.toggle()" x-show="!$store.darkMode.on" x-cloak></flux:menu.item>
         </flux:tooltip>
         <flux:tooltip content="Switch to light mode">
             <flux:navbar.item icon="tabler.sun" label="Light mode" @click="$store.darkMode.toggle()" x-show="$store.darkMode.on" x-cloak></flux:menu.item>
         </flux:tooltip>
+--}}
         <flux:separator vertical />
         <flux:tooltip content="Visit Github repository">
             <flux:navbar.item icon="tabler.brand-github" href="https://github.com/Ympact/flux-icons" target="_new" label="Github"></flux:menu.item>
@@ -33,80 +49,3 @@
     </flux:navbar>
 
 </flux:header>
-
-<script>
-    document.addEventListener('livewire:navigated', () => {
-        // wire:navigate will wipe out the dark class on the body element, se we need to reapply it...
-        Alpine.store('darkMode').applyToBody()
-    })
-    
-    document.addEventListener('alpine:init', () => {
-
-    Alpine.store('darkMode', {
-        on: false,
-
-        toggle() {
-            console.log('toggle')
-            this.on = ! this.on
-        },
-
-        on() {
-            this.on = true
-        },
-
-        off() {
-            this.on = false
-        },
-
-        init() {
-            console.log('init')
-            this.on = this.wantsDarkMode()
-
-            Alpine.effect(() => {
-                document.dispatchEvent(new CustomEvent('dark-mode-toggled', { detail: { isDark: this.on }, bubbles: true }))
-                this.applyToBody()
-            })
-
-            // Putting this in a set timeout to wait for the iframes to be loaded...
-            setTimeout(() => {
-                Alpine.effect(() => {
-                    this.applyToIframes()
-                })
-            }, 5000)
-
-            let media = window.matchMedia('(prefers-color-scheme: dark)')
-
-            media.addEventListener('change', e => {
-                this.on = media.matches
-            })
-        },
-
-        wantsDarkMode() {
-            let media = window.matchMedia('(prefers-color-scheme: dark)')
-
-            if (window.localStorage.getItem('darkMode') === '') {
-                return media.matches
-            } else {
-                return JSON.parse(window.localStorage.getItem('darkMode'))
-            }
-        },
-
-        applyToBody() {
-            let state = this.on
-
-            window.localStorage.setItem('darkMode', JSON.stringify(state))
-
-            state ? document.body.classList.add('dark') : document.body.classList.remove('dark')
-        },
-
-        applyToIframes() {
-            let state = this.on
-
-            // Update dark mode inside iframes...
-            state
-                ? document.querySelectorAll('iframe').forEach(iframe => iframe.contentDocument?.querySelector('body')?.classList?.add('dark'))
-                : document.querySelectorAll('iframe').forEach(iframe => iframe.contentDocument?.querySelector('body')?.classList?.remove('dark'))
-        }
-    })
-})
-</script>
