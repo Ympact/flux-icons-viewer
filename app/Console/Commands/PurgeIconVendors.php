@@ -44,9 +44,17 @@ class PurgeIconVendors extends Command
 
     private function purgeVendorFiles($vendor, $vendorDetails)
     {
+        // blade files
         $vendorPath = resource_path("views/flux/icon/$vendor");
         if (file_exists($vendorPath)) {
             $this->info("Removing $vendor icons from $vendorPath...");
+            exec("rm -rf $vendorPath");
+        }
+
+        // service files
+        $vendorPath = app_path("Services/FluxIcons/Vendors/$vendor");
+        if (file_exists($vendorPath)) {
+            $this->info("Removing $vendor service files from $vendorPath...");
             exec("rm -rf $vendorPath");
         }
     }
