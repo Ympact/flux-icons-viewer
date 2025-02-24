@@ -34,14 +34,6 @@
                 <flux:menu.item icon="computer-desktop" x-on:click="$flux.appearance = 'system'">System</flux:menu.item>
             </flux:menu>
         </flux:dropdown>
-{{--
-        <flux:tooltip content="Switch to dark mode">
-            <flux:navbar.item icon="tabler.moon" iconVariant="outline" iconSize="sm" label="Dark mode" @click="$store.darkMode.toggle()" x-show="!$store.darkMode.on" x-cloak></flux:menu.item>
-        </flux:tooltip>
-        <flux:tooltip content="Switch to light mode">
-            <flux:navbar.item icon="tabler.sun" label="Light mode" @click="$store.darkMode.toggle()" x-show="$store.darkMode.on" x-cloak></flux:menu.item>
-        </flux:tooltip>
---}}
         <flux:separator vertical />
         <flux:tooltip content="Visit Github repository">
             <flux:navbar.item icon="tabler.brand-github" href="https://github.com/Ympact/flux-icons" target="_new" label="Github"></flux:menu.item>
