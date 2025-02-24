@@ -14,7 +14,7 @@
         "livewire/flux-pro": "^1.0",
         "livewire/livewire": "^3.4",
         "livewire/volt": "^1.0",
-        "ympact/flux-icons": "dev-dev"
+        "ympact/flux-icons": "dev-main"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -74,6 +74,10 @@
         "flux-pro": {
             "type": "composer",
             "url": "https://composer.fluxui.dev"
+        },
+        "0": {
+            "type": "path",
+            "url": "./packages/ympact/flux-icons"
         }
     }
 }

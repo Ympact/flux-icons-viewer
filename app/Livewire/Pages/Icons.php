@@ -34,6 +34,12 @@ class Icons extends Component
     #[Url]
     public $page = 1;
 
+    public $iconModal = false;
+     
+    public $selectedIcon;
+
+    public $orginalIcon = '';
+
     public function mount()
     {
         $this->vendors = IconBuilder::getAvailableVendors()->mapWithKeys(function($vendor, $key){
@@ -54,6 +60,42 @@ class Icons extends Component
         $this->variant = array_keys($this->variants)[0];
 
         $this->findIcons();
+    }
+
+    public function showIconModal($icon){
+        $this->selectedIcon = $icon;
+        // get the original icon from the vendor:
+        // lets use flux-icons config to get node_modules path
+        $vendorDetails = config("flux-icons.vendors.$this->vendor");
+        $vendorPackage = $vendorDetails['package'];
+        $vendorPath = base_path("node_modules/$vendorPackage");
+
+        // determine the outline variant file based on variants config:
+        $sourceConfig = $vendorDetails['variants']['outline']['source'];
+        if(is_array($sourceConfig)){
+            // dir, suffix, prefix
+            $file = Str::of($sourceConfig['dir'])
+                ->append('/')
+                ->append($sourceConfig['prefix'] ?? '')
+                ->append($icon)
+                ->append($sourceConfig['suffix'] ?? '')
+                ->finish('.svg');
+        }
+        else{
+            $file = Str::of($sourceConfig)->append('/')->append($icon)->finish('.svg');
+        }
+        if(file_exists(base_path($file))){
+            $this->orginalIcon = File::get(base_path($file));
+        }
+        else{
+            $this->orginalIcon = 'Icon not found';
+        }
+
+        $this->iconModal = true;
+    }
+
+    public function closeIconModal(){
+        $this->iconModal = false;
     }
 
 

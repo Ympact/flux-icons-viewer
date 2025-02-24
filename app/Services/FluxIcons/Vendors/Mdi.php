@@ -1,10 +1,9 @@
 <?php
 
-namespace Ympact\FluxIcons\Services\Vendors;
+namespace App\Services\FluxIcons\Vendors;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-
 
 class Mdi
 {
@@ -43,7 +42,7 @@ class Mdi
      * @param $size size of the resource icon
      * @return boolean
      */
-    public static function solidFilter($file): bool
+    public static function solidFilter($file, &$icons): bool
     {
         $filename = pathinfo($file, PATHINFO_FILENAME);
         if (Str::contains($filename,'-outline')) {

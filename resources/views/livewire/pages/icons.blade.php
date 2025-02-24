@@ -40,15 +40,15 @@
                 <div class="grid grid-cols-6 gap-4" x-ref="gallery">
 
                     @foreach($this->icons as $icon)
-                    <flux:modal.trigger name="show-icon">
-                        <flux:card as="button" wire:key="{{ $icon['icon'] }}" class="relative flex flex-col items-center justify-center space-y-3 !p-2 aspect-square hover:bg-zinc-50 dark:hover:bg-white/5 cursor-pointer transition">
+                        <flux:card as="button" wire:key="{{ $icon['icon'] }}" 
+                            x-on:click="$wire.showIconModal('{{ $icon['icon'] }}')"
+                            class="relative flex flex-col items-center justify-center space-y-3 !p-2 aspect-square hover:bg-zinc-50 dark:hover:bg-white/5 cursor-pointer transition">
                             <flux:icon x-bind:style="{'width': viewSize+'px', 'height':viewSize+'px'}" icon="{{ $this->getNamespace() }}.{{ $icon['icon'] }}" variant="{{ $variant }}" class="text-2xl dark:!text-white/90" />
                             <div class="flex flex-col w-full justify-center items-center truncate">
                                 <div class="text-xs text-zinc-800/30 dark:!text-white/30">{{ $this->getNamespace() }}.</div>
                                 <div class="text-xs text-zinc-800/80 dark:!text-white/50 w-full text-center truncate">{{ $icon['icon'] }}</div>
                             </div>
                         </flux:card>
-                    </flux:modal.trigger>
                     @endforeach
                 </div>
 
@@ -70,16 +70,41 @@
 
     </div>
 
-    <flux:modal name="show-icon" class="md:w-96 space-y-6">
-        <div>
-            <flux:heading size="lg">Update profile</flux:heading>
+    <flux:modal name="show-icon" class="md:w-96 space-y-6" wire:model.self="iconModal" @close="closeIconModal">
 
-            <div>
-                <div>original</div>
-                <div>outline icon</div>
+            <flux:heading size="lg">Icon</flux:heading>
+            @if($this->selectedIcon )
+            <flux:card class="bg-zinc-50 flex items-start">
+                <flux:header>Original icon</flux:header>
+                <div class="flex items-center justify-center">
+                    {!! $this->orginalIcon !!}
+                </div>
+            </flux:card>
+            <flux:header>Flux variants</flux:header>
+            <div class="flex items-stretch space-x-4">
+                <flux:card class="items-center justify-center">
+                    <flux:icon icon="{{ $this->vendor }}.{{ $this->selectedIcon }}" variant="outline" />
+                </flux:card>
+                <flux:card class="items-center justify-center">
+                    <flux:icon icon="{{ $this->vendor }}.{{ $this->selectedIcon }}" variant="solid" />
+                </flux:card>
+                <flux:card class="items-center justify-center">
+                    <flux:icon icon="{{ $this->vendor }}.{{ $this->selectedIcon }}" variant="mini" />
+                </flux:card>
+                <flux:card class="items-center justify-center">
+                    <flux:icon icon="{{ $this->vendor }}.{{ $this->selectedIcon }}" variant="micro" />
+                </flux:card>
             </div>
-            // mark as correct / incorrect
-        </div>
+
+            @endif
+
+
+            <flux:separator/>
+            <div  class="flex items-center space-x-2 justify-center">
+            <flux:button icon="arrow-left"></flux:button>
+            <flux:button iconTrailing="arrow-right"></flux:button>
+            </div>
+
     </flux:modal>
 
 </div>
