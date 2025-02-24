@@ -20,3 +20,5 @@ yarn-error.log
 /.vscode
 /.zed
 /resources/views/flux/icon/*
+composer.lock
+package-lock.json
